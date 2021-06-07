@@ -1,0 +1,27 @@
+---
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  namespace: traefik-v2
+  name: whoami-ingress
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    cert-manager.io/cluster-issuer: "letsencrypt"
+
+spec:
+  tls:
+  - hosts:
+    - traefik-poc-ingress.lab.outsystemscloudrd.net
+    secretName: traefik-poc-ingress-tls
+  rules:
+    - host: traefik-poc-ingress.lab.outsystemscloudrd.net
+      http:
+        paths:
+          - path: /test1
+            pathType: Prefix
+            backend:
+              service:
+                name: whoami
+                port: 
+                  number: 80

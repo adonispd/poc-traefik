@@ -1,0 +1,19 @@
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  namespace: traefik-v2
+  name: whoami-ingressroute
+spec:
+  entryPoints:
+    - websecure
+  routes:
+  - kind: Rule
+    match: Host(`traefik-poc-ir.lab.outsystemscloudrd.net`) && Path(`/test2`)
+    services:
+    - kind: Service
+      name: whoami
+      passHostHeader: true
+      port: 80
+  tls:
+    certResolver: letsencrypt-traefik

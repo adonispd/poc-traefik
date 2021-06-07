@@ -1,0 +1,47 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: istio-gw-whoami
+  namespace: traefik-v2
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  # - hosts:
+  #     - istio-poc.lab.outsystemscloudrd.net
+  #   port:
+  #     name: http
+  #     number: 80
+  #     protocol: HTTP
+  - hosts:
+    - istio-poc.lab.outsystemscloudrd.net
+    port:
+      number: 443
+      name: https-istio-poc
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      credentialName: cert-lab-outsystemscloudrd    
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: istio-vs
+  namespace: traefik-v2
+spec:
+  hosts:
+  - istio-poc.lab.outsystemscloudrd.net
+  gateways:
+  - istio-gw-whoami
+  http:
+  - match:
+    - uri:
+        exact: /test3
+    route:
+    - destination:
+        host: whoami
+        port:
+          number: 80
+
